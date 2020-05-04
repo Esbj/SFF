@@ -15,15 +15,25 @@ namespace SFF.Controllers
     public class RentalController : ControllerBase
     {
         private readonly SFFContext _context;
-        public MovieController(SFFContext context)
+        public RentalController(SFFContext context)
         {
             _context = context;
         }
         //Create a rental
         [HttpPost]
-        public void NewRental()
+        public void NewRental(Rental rental)
         {
-            
+            _context.Rentals.Add(rental);
+        }
+        //Sätt en film till utlålad
+        [HttpPut]
+        public async Task<ActionResult<IEnumerable<Rental>>> CreateInactiveRental(Rental rental)
+        {
+            var result = (from Rental in _context.Rentals
+                            where rental == Rental
+                            select Rental).FirstOrDefault();
+            result.Rented = false;
+            return await _context.Rentals.ToListAsync();
         }
     }
 }

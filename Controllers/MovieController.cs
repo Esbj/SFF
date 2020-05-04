@@ -37,7 +37,7 @@ namespace SFF.Controllers
         //Uppdatera max uthyrningar
         public async Task<ActionResult<IEnumerable<Movie>>> ChangeMaxRentals(Movie movie, int NewRentLimit)
         {
-            Movie result = (from Movie in _context.Movies
+            var result = (from Movie in _context.Movies
                             where movie.Id == Movie.Id
                             select movie).FirstOrDefault();
 
