@@ -32,6 +32,7 @@ namespace SFF.Controllers
         {
             _context.Movies.Add(movie);
         }
+        //Uppdatera en films 
         [HttpPut]
         //Uppdatera max uthyrningar
         public async Task<ActionResult<IEnumerable<Movie>>> ChangeMaxRentals(Movie movie, int NewRentLimit)
