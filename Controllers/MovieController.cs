@@ -33,14 +33,16 @@ namespace SFF.Controllers
             _context.Movies.Add(movie);
         }
         [HttpPut]
+        //Uppdatera max uthyrningar
         public async Task<ActionResult<IEnumerable<Movie>>> ChangeMaxRentals(Movie movie, int NewRentLimit)
         {
             Movie result = (from Movie in _context.Movies
                             where movie.Id == Movie.Id
                             select movie).FirstOrDefault();
 
-            result.MaxRentals = NewRentLimit
-            return await _context.Movies.ToListAsync;
+            result.MaxRentals = NewRentLimit;
+            return await _context.Movies.ToListAsync();
         }
+        
     }
 }
