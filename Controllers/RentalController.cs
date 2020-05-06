@@ -24,6 +24,7 @@ namespace SFF.Controllers
         public void NewRental(Rental rental)
         {
             _context.Rentals.Add(rental);
+            _context.SaveChanges();
         }
         //Sätt en film till utlålad
         [HttpPut]
@@ -33,6 +34,7 @@ namespace SFF.Controllers
                             where rental == Rental
                             select Rental).FirstOrDefault();
             result.Rented = false;
+            _context.SaveChanges();
             return await _context.Rentals.ToListAsync();
         }
     }

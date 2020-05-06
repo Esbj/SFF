@@ -5,10 +5,7 @@
         public int Id { get; set; }
         public int MovieId { get; set; }
         public int AssosiationId { get; set; }
-        public bool Rented { get; set; }
-        public Rental()
-        {
-            Rented = true;
-        }
+        public bool Rented { get; set; } =  true;
+        public int Date { get; set; }
     }
 }

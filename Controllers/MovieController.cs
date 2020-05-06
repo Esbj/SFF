@@ -31,6 +31,7 @@ namespace SFF.Controllers
         public void PostMovie(Movie movie)
         {
             _context.Movies.Add(movie);
+            _context.SaveChanges();
         }
         //Uppdatera en films 
         [HttpPut]
@@ -42,6 +43,7 @@ namespace SFF.Controllers
                             select movie).FirstOrDefault();
 
             result.MaxRentals = NewRentLimit;
+            _context.SaveChanges(); 
             return await _context.Movies.ToListAsync();
         }
         
