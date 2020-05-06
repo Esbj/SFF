@@ -23,7 +23,6 @@ namespace SFF.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Movie>>> GetMovies()
         {
-
             return await _context.Movies.ToListAsync();
         }
         //Lägg till en film
@@ -33,7 +32,6 @@ namespace SFF.Controllers
             _context.Movies.Add(movie);
             _context.SaveChanges();
         }
-        //Uppdatera en films 
         [HttpPut]
         //Uppdatera max uthyrningar
         public async Task<ActionResult<IEnumerable<Movie>>> ChangeMaxRentals(Movie movie, int NewRentLimit)
@@ -45,7 +43,6 @@ namespace SFF.Controllers
             result.MaxRentals = NewRentLimit;
             _context.SaveChanges(); 
             return await _context.Movies.ToListAsync();
-        }
-        
+        }        
     }
 }
