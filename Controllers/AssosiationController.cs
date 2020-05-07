@@ -27,7 +27,7 @@ namespace SFF.Controllers
             _context.Add(assosiation);
             _context.SaveChanges();
         }
-        [HttpPut("{id/remove}")]
+        [HttpPut("{id}/remove")]
         //Ta bort en filmstudio (gör den till inaktiv för att inte förstära kopplingar)
         public void RemoveAssiosiation(Assosiation assosiation)
         {
@@ -41,7 +41,7 @@ namespace SFF.Controllers
         }
 
 
-        [HttpGet ("{id/borrowed}") ]
+        [HttpGet ("{id}/borrowed") ]
         //Visa lånade filmer av filmstudion 
         public async Task<ActionResult<IEnumerable<Movie>>> FindBorrowedMovies(int id)
         {

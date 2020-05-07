@@ -27,12 +27,12 @@ namespace SFF.Controllers
             _context.SaveChanges();
         }
         //Sätt en film till utlålad
-        [HttpPut]
+        [HttpPut("{Id}")]
         public async Task<ActionResult<IEnumerable<Rental>>> CreateInactiveRental(Rental rental)
         {
             var result = (from Rental in _context.Rentals
-                            where rental == Rental
-                            select Rental).FirstOrDefault();
+                          where rental == Rental
+                          select Rental).FirstOrDefault();
             result.Rented = false;
             _context.SaveChanges();
             return await _context.Rentals.ToListAsync();
