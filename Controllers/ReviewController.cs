@@ -17,21 +17,23 @@ namespace SFF.Controllers
         {
             _context = context;
         }
-        //[HttpPost("{id}")]
-        ////Lägg till en reivew
-        //public void AddReview(Review review)
-        //{
-        //    _context.Reviews.Add(review);
-        //    _context.SaveChanges();
-        //}
-        //public async Task<ActionResult<IEnumerable<Review>>> RemoveReview(int id)
-        //{
-        //    var toRemove = await _context.Reviews.FindAsync(id);
+        [HttpPost("add")]
+        //Lägg till en reivew
+        public void AddReview(Review review)
+        {
+            _context.Reviews.Add(review);
+            _context.SaveChanges();
+        }
+        [HttpPut("{id}")]
+        //ta bort en review
+        public async Task<ActionResult<IEnumerable<Review>>> RemoveReview(int id)
+        {
+            var toRemove = await _context.Reviews.FindAsync(id);
 
-        //    toRemove.Trivia = null;
-        //    _context.SaveChanges();
-        //    return;
-            
-        //}
+            toRemove.Trivia = null;
+            _context.SaveChanges();
+            return _context.Reviews;
+
+        }
     }
 }

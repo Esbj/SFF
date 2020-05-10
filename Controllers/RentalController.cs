@@ -28,7 +28,7 @@ namespace SFF.Controllers
         }
         //Sätt en film till utlålad
         [HttpPut("{Id}")]
-        public async Task<ActionResult<IEnumerable<Rental>>> CreateInactiveRental(Rental rental)
+        public async Task<ActionResult<IEnumerable<Rental>>> RemoveRental(Rental rental)
         {
             var result = (from Rental in _context.Rentals
                           where rental == Rental

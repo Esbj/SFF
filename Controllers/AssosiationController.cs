@@ -20,6 +20,7 @@ namespace SFF.Controllers
         {
             _context = context;
         }
+        
         //Lägg till en filmstudio
         [HttpPost]
         public void AddAssisiation(Assosiation assosiation)
@@ -27,9 +28,24 @@ namespace SFF.Controllers
             _context.Add(assosiation);
             _context.SaveChanges();
         }
-        [HttpPut("{id}/remove")]
+
+
+        //hämta en filmstudio
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Assosiation>> GetAssosiation (int id)
+        {
+            var assosiation = await _context.Assosiations.FindAsync(id);
+            return assosiation;
+        }
+        [HttpDelete("{id}")]
+        public void DeleteAssosiation(int id)
+        {
+
+        }
+        
         //Ta bort en filmstudio (gör den till inaktiv för att inte förstära kopplingar)
-        public void RemoveAssiosiation(Assosiation assosiation)
+        [HttpPut("remove/{id}")]
+        public void DeActivateAssiosiation(Assosiation assosiation)
         {
             var toRemove = (from Assosiation in _context.Assosiations
                             where Assosiation.Id == assosiation.Id
@@ -41,7 +57,7 @@ namespace SFF.Controllers
         }
 
 
-        [HttpGet ("{id}/borrowed") ]
+        [HttpGet ("rented/{id}") ]
         //Visa lånade filmer av filmstudion 
         public async Task<ActionResult<IEnumerable<Movie>>> FindBorrowedMovies(int id)
         {
@@ -60,6 +76,8 @@ namespace SFF.Controllers
                 var movie = _context.Movies.Where(m => m.Id == Rental.Id).First();
                 borrowedMovies.Add(movie);
             }
+            if (borrowedMovies == null)
+                return NotFound();
 
             return borrowedMovies;
         }

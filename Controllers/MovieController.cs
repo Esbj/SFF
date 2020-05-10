@@ -19,30 +19,32 @@ namespace SFF.Controllers
         {
             _context = context;
         }
-        //GET: Hämta alla filmer
+        //Hämta alla filmer
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Movie>>> GetMovies()
         {
             return await _context.Movies.ToListAsync();
         }
         //Lägg till en film
-        [HttpPost]
-        public void PostMovie(Movie movie)
+        [HttpPost("add")]
+        public Movie PostMovie(Movie movie)
         {
             _context.Movies.Add(movie);
             _context.SaveChanges();
-        }
-        [HttpPut("{Id}")]
-        //Uppdatera max uthyrningar
-        public async Task<ActionResult<IEnumerable<Movie>>> ChangeMaxRentals(Movie movie, int Id)
-        {
-            var result = (from Movie in _context.Movies
-                          where Id == Movie.Id
-                          select Movie).FirstOrDefault();
+            return movie;
 
-            result.MaxRentals = movie.MaxRentals;
+        }
+        
+        
+        //Uppdatera max uthyrningar
+        [HttpPut("update/{id}/{newRental}")]
+        public async Task<ActionResult<Movie>> ChangeMaxRentals(int id, int newRental)
+        {
+            var result = await _context.Movies.FindAsync(id);
+
+            result.MaxRentals = newRental;
             _context.SaveChanges();
-            return await _context.Movies.ToListAsync();
+            return result;
         }
     }
 }
