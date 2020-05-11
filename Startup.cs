@@ -30,8 +30,7 @@ namespace SFF
             services.AddDbContext<SFFContext>(opt => opt.UseSqlite("Data Source = SFFDatabas.db"));
             services.AddControllers();
 
-            services.AddControllers()
-                            .AddXmlSerializerFormatters();
+            services.AddControllers().AddXmlSerializerFormatters();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

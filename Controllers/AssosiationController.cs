@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,9 @@ namespace SFF.Controllers
         public async Task<ActionResult<Assosiation>> GetAssosiation (int id)
         {
             var assosiation = await _context.Assosiations.FindAsync(id);
+            if (assosiation == null)
+                return NotFound();
+
             return assosiation;
         }
         [HttpDelete("{id}")]
@@ -43,19 +47,31 @@ namespace SFF.Controllers
 
         }
         
-        //Ta bort en filmstudio (gör den till inaktiv för att inte förstära kopplingar)
+        //Ta bort en filmstudio (gör den till inaktiv för att inte förstöra kopplingar)
         [HttpPut("remove/{id}")]
-        public void DeActivateAssiosiation(Assosiation assosiation)
+        public async Task<ActionResult<Assosiation>> DeActivateAssiosiation(int id)
         {
-            var toRemove = (from Assosiation in _context.Assosiations
-                            where Assosiation.Id == assosiation.Id
-                            select Assosiation).FirstOrDefault();
+            var toRemove = await _context.Assosiations.FindAsync(id);
 
             toRemove.IsActive = false;
             _context.SaveChanges();
+            return toRemove;
 
         }
+        //updatera informationen om en filmstudio
+        [HttpPut("update/{id}")]
+        public async Task<ActionResult<Assosiation>> UppdateAsosiation(Assosiation assosiation, int id)
+        {
+            var toUpdate = await _context.Assosiations.FindAsync(id);
+            
+            if (toUpdate.Id != id)
+                return StatusCode(500);
 
+            toUpdate.Location = assosiation.Location;
+            toUpdate.Name = assosiation.Name;
+            await _context.SaveChangesAsync();
+            return toUpdate;
+        }
 
         [HttpGet ("rented/{id}") ]
         //Visa lånade filmer av filmstudion 
@@ -65,19 +81,18 @@ namespace SFF.Controllers
             var assosiation = await _context.Assosiations.FindAsync(id);
             //hämta uthyrningarna
             var rentals = await (from Rentals in _context.Rentals
-                                  where assosiation.Id == Rentals.Id && Rentals.Rented == true
+                                  where assosiation.Id == Rentals.AssosiationId && Rentals.Rented == true
                                   select Rentals).ToListAsync();
+
 
 
             //sortera ut filmerna som har rätt Id och stoppa i resultatet
             var borrowedMovies = new List<Movie>();
             foreach(var Rental in rentals)
             {
-                var movie = _context.Movies.Where(m => m.Id == Rental.Id).First();
+                var movie = _context.Movies.Where(m => m.Id == Rental.MovieId).First();
                 borrowedMovies.Add(movie);
             }
-            if (borrowedMovies == null)
-                return NotFound();
 
             return borrowedMovies;
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SFF.Models;
 
 namespace SFF.Controllers
@@ -17,6 +18,14 @@ namespace SFF.Controllers
         {
             _context = context;
         }
+        [HttpGet]
+        //hämta alla trivias
+        public async Task<IEnumerable<Review>> GetReviews()
+        {
+            var reviews = await _context.Reviews.ToListAsync();
+            return reviews;
+        }
+
         [HttpPost("add")]
         //Lägg till en reivew
         public void AddReview(Review review)
@@ -24,16 +33,16 @@ namespace SFF.Controllers
             _context.Reviews.Add(review);
             _context.SaveChanges();
         }
-        [HttpPut("{id}")]
-        //ta bort en review
-        public async Task<ActionResult<IEnumerable<Review>>> RemoveReview(int id)
+        [HttpPut("removeTrivia/{id}")]
+        //ta bort en trivia
+        //nullar endast trivia istället för hela obj för att kunna fortf räkna ut medelbetyg
+        public async Task<ActionResult<Review>> RemoveReview(int id)
         {
             var toRemove = await _context.Reviews.FindAsync(id);
 
             toRemove.Trivia = null;
-            _context.SaveChanges();
-            return _context.Reviews;
-
+            await _context.SaveChangesAsync();
+            return toRemove;
         }
     }
 }

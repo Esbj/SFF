@@ -19,23 +19,25 @@ namespace SFF.Controllers
         {
             _context = context;
         }
-        //Create a rental
+        //Skapa en utlåning
         [HttpPost]
         public void NewRental(Rental rental)
         {
             _context.Rentals.Add(rental);
             _context.SaveChanges();
         }
-        //Sätt en film till utlålad
-        [HttpPut("{Id}")]
-        public async Task<ActionResult<IEnumerable<Rental>>> RemoveRental(Rental rental)
+        //Sätt en film till återlämnad
+        [HttpPut("return/{Id}")]
+        public async Task<ActionResult<Rental>> ReturnRental(int id)
         {
-            var result = (from Rental in _context.Rentals
-                          where rental == Rental
-                          select Rental).FirstOrDefault();
+            var result = await _context.Rentals.FindAsync(id);
+            if (result == null)
+                return NotFound();
+
+
             result.Rented = false;
             _context.SaveChanges();
-            return await _context.Rentals.ToListAsync();
+            return result;
         }
     }
 }
