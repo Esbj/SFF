@@ -41,13 +41,8 @@ namespace SFF.Controllers
 
             return assosiation;
         }
-        [HttpDelete("{id}")]
-        public void DeleteAssosiation(int id)
-        {
-
-        }
         
-        //Ta bort en filmstudio (gör den till inaktiv för att inte förstöra kopplingar)
+        //Ta bort en filmstudio (gör den till inaktiv för att inte förstöra kopplingar med reviews)
         [HttpPut("remove/{id}")]
         public async Task<ActionResult<Assosiation>> DeActivateAssiosiation(int id)
         {
